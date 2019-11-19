@@ -25,11 +25,13 @@ Bit Position | Function
 9-4          | Number of Words Available
 
 **TX Register**
+
 Bit Position | Description
 -------------|-------------
 9-0          | Frame word
 
 **RX Register**
+
 Bit Position | Description
 -------------|-------------
 0            | Parity Bit
