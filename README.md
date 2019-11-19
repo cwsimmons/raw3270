@@ -11,8 +11,8 @@
 Byte Address | Function
 -------------|----------
 0x0          | TX Register
-0x1          | RX Register
-0x2/0x3      | Control Register
+0x4          | RX Register
+0x8/0xC      | Control Register
 
 **Control Register**
 
@@ -23,3 +23,15 @@ Bit Position | Function
 2            | TX Active
 3            | RX Data Available
 9-4          | Number of Words Available
+
+**TX Register**
+Bit Position | Description
+-------------|-------------
+9-0          | Frame word
+
+**RX Register**
+Bit Position | Description
+-------------|-------------
+0            | Parity Bit
+10-1         | Payload
+11           | Sync Bit ('1')
