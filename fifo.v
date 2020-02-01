@@ -1,27 +1,41 @@
 `timescale 1ns / 1ps
 
-/*
+/* 
  * Simple FIFO
  *
- * Supports discarding either new or old data when full
+ * Author: Chris Simmons
+ * Date:   12/15/2019
  */
 
 module fifo (
-    input clk,
-    input reset,
-    input mode,
-    input wen,
-    input ren,
-    input [11:0] write,
-    output [11:0] read,
-    output state,
-    output [5:0] occupancy
+    clk,
+    reset,
+    mode,
+    wen,
+    ren,
+    write,
+    read,
+    state,
+    occupancy
     );
     
-    reg [11:0] mem [0:31];
+    parameter WIDTH = 8;
+    parameter DEPTH = 5;
     
-    reg [4:0] top;
-    reg [4:0] bottom;
+    input clk;
+    input reset;
+    input mode;
+    input wen;
+    input ren;
+    input [WIDTH - 1:0] write;
+    output [WIDTH - 1:0] read;
+    output state;
+    output [DEPTH - 1:0] occupancy;
+    
+    reg [WIDTH - 1:0] mem [0: 2**DEPTH - 1];
+    
+    reg [DEPTH - 1:0] top;
+    reg [DEPTH - 1:0] bottom;
     
     assign occupancy = top - bottom;
     assign state = (top != bottom);
@@ -37,7 +51,7 @@ module fifo (
         end
         else
         begin
-            //If not full..
+            
             if (top != bottom - 1)
             begin
             
@@ -47,18 +61,15 @@ module fifo (
                     mem[top] <= write;
                 end
                 
-                if (ren)
+                if (ren && state)
                 begin
                     bottom <= bottom + 1;
                 end
             
             end
             else
-            //If full...
             begin
                 
-                //If mode allows, write new and discard oldest
-                //Otherwise ignore the new write
                 if (wen && mode)
                 begin
                     top <= top + 1;
